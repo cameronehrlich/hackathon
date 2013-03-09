@@ -19,8 +19,8 @@
 		32DB1B0316EAF42F001B0C17 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32DB1B0116EAF42F001B0C17 /* MainStoryboard.storyboard */; };
 		32DB1B0616EAF42F001B0C17 /* ADViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DB1B0516EAF42F001B0C17 /* ADViewController.m */; };
 		32DB1B0F16EB07B4001B0C17 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1B0C16EB07B4001B0C17 /* AudioToolbox.framework */; };
-		32DB1B1016EB07B4001B0C17 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1B0D16EB07B4001B0C17 /* AudioUnit.framework */; };
 		32DB1B1116EB07B4001B0C17 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1B0E16EB07B4001B0C17 /* CoreAudio.framework */; };
+		32DB1B1416EB08D5001B0C17 /* ADAudioModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DB1B1316EB08D5001B0C17 /* ADAudioModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +43,8 @@
 		32DB1B0C16EB07B4001B0C17 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		32DB1B0D16EB07B4001B0C17 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		32DB1B0E16EB07B4001B0C17 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		32DB1B1216EB08D4001B0C17 /* ADAudioModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADAudioModel.h; sourceTree = "<group>"; };
+		32DB1B1316EB08D5001B0C17 /* ADAudioModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADAudioModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +53,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				32DB1B0F16EB07B4001B0C17 /* AudioToolbox.framework in Frameworks */,
-				32DB1B1016EB07B4001B0C17 /* AudioUnit.framework in Frameworks */,
 				32DB1B1116EB07B4001B0C17 /* CoreAudio.framework in Frameworks */,
 				32DB1AEA16EAF42F001B0C17 /* UIKit.framework in Frameworks */,
 				32DB1AEC16EAF42F001B0C17 /* Foundation.framework in Frameworks */,
@@ -100,6 +101,8 @@
 				32DB1B0116EAF42F001B0C17 /* MainStoryboard.storyboard */,
 				32DB1B0416EAF42F001B0C17 /* ADViewController.h */,
 				32DB1B0516EAF42F001B0C17 /* ADViewController.m */,
+				32DB1B1216EB08D4001B0C17 /* ADAudioModel.h */,
+				32DB1B1316EB08D5001B0C17 /* ADAudioModel.m */,
 				32DB1AF016EAF42F001B0C17 /* Supporting Files */,
 			);
 			path = "Acoustic Detection";
@@ -189,6 +192,7 @@
 				32DB1AF616EAF42F001B0C17 /* main.m in Sources */,
 				32DB1AFA16EAF42F001B0C17 /* ADAppDelegate.m in Sources */,
 				32DB1B0616EAF42F001B0C17 /* ADViewController.m in Sources */,
+				32DB1B1416EB08D5001B0C17 /* ADAudioModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

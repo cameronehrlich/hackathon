@@ -7,17 +7,19 @@
 //
 
 #import "ADViewController.h"
+#import "ADAudioModel.h"
 
-@interface ADViewController ()
-
-@end
-
-@implementation ADViewController
+@implementation ADViewController{
+    ADAudioModel *model;
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    model = [[ADAudioModel alloc] init];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
