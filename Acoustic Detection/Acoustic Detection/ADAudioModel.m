@@ -13,6 +13,8 @@
 #import "ADAudioModel.h"
 #import "Convolver.h"
 
+
+
 const Float64 kSampleRate = 44100.0;
 const NSUInteger kBufferByteSize = 2048 * 4;
 const float threshHold = -10.0f;
@@ -25,10 +27,13 @@ const float threshHold = -10.0f;
     
     int countDown;
     
-    Float32* calibration; 
+    Float32* calibration1;
+    Float32* calibration2;
+    
 }
 
 @synthesize isCalibrating;
+@synthesize currentCalibrationTarget;
 
 - (id)init
 {
@@ -47,8 +52,9 @@ const float threshHold = -10.0f;
     return self;
 }
 
--(void)beginCalibrating{
-    [self log:@"Ready to Calibrate..."];
+-(void)beginCalibrating:(int)calTarget{
+    [self log:[NSString stringWithFormat:@"Ready to Calibrate # : %d",calTarget]];
+    currentCalibrationTarget = calTarget;
     isCalibrating = YES;
 }
 
@@ -101,8 +107,12 @@ void InputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffer
     Float32 max, sampleValue = 0.0;
 	for (int frame = 0; frame < count; frame++) {
 		sampleValue = audioData[frame];
-		if (sampleValue < 0.0f){sampleValue = -sampleValue;}
-        if (max < sampleValue){max = sampleValue;}
+		if (sampleValue < 0.0f){
+            sampleValue = -sampleValue;
+        }
+        if (max < sampleValue){
+            max = sampleValue;
+        }
 	}
 	double db = 20 * log10 (max);
     
@@ -136,7 +146,7 @@ void InputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffer
             if (isCalibrating) {
                 [self calibrate:buffData WithCount:count];
             }else{
-               [self test:buffData WithCount:count];
+                [self test:buffData WithCount:count];
             }
         }
     }else{
@@ -149,39 +159,44 @@ void InputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffer
 }
 
 -(void)test:(Float32*)buff WithCount:(int)count{
+    Float32 rating1= 0.0f;
+    Float32 rating2= 0.0f;
     
-    float avgC = 0.0f;
-    float avgB = 0.0f;
-    
-    int avgLimit = 10; //for testing
-    
-    if (calibration != nil) {
-        for (int i = 0; i< count; i++) {
-            if (i <= avgLimit) {
-                avgC += calibration[i];
-                avgB += buff[i];
-            }
-        }
-
-        [self log:[NSString stringWithFormat:@"Cal : %f, Buff : %f", avgC/10,avgB/10]];
-        
-        Float32 rating = [convolver convolveVector:buff ofSize:count with:calibration ofSize:count];
-
-        [self log:[NSString stringWithFormat:@"Rating : %f",rating]];
+    if (calibration1 != nil) {
+        rating1 = [convolver convolveVector:buff ofSize:count with:calibration1 ofSize:count];
     }
-
+    if (calibration2 != nil) {
+        rating2 = [convolver convolveVector:buff ofSize:count with:calibration2 ofSize:count];
+    }
     
-    
+    [self log:[NSString stringWithFormat:@"<rating1 : %f , rating2 : %f>", rating1, rating2]];
+    if (rating1 > rating2) {
+        [self log:@"CHOSE # 1"];
+    }else{
+        [self log:@"CHOSE # 2"];
+    }
 }
 
 -(void)calibrate:(Float32*)buff WithCount:(int)count{
 
-    calibration = malloc(count*sizeof(Float32));
 
-    memcpy(calibration, buff, count);
-    
-    [self log:@"Calibrated"];
-    
+    if (currentCalibrationTarget == 1) {
+        calibration1 = malloc(count*sizeof(Float32));
+        
+        memcpy(calibration1, buff, count);
+        
+        [self log:@"Calibrated #1"];
+    }else if (currentCalibrationTarget == 2){
+        calibration2 = malloc(count*sizeof(Float32));
+        
+        memcpy(calibration2, buff, count);
+        
+        [self log:@"Calibrated #2"];
+        
+    }else{
+        [self log:@"invalid calibration target number"];
+    }
+
     isCalibrating = NO;
 }
 

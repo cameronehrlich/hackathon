@@ -31,7 +31,7 @@
 }
 
 - (IBAction)calibrateButton:(id)sender {
-    [model beginCalibrating];
+    [model beginCalibrating:[sender tag]];
 }
 
 - (void)didReceiveMemoryWarning

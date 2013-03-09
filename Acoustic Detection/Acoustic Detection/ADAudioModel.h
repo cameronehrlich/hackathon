@@ -13,8 +13,9 @@
 @interface ADAudioModel : NSObject
 
 @property (assign) BOOL isCalibrating;
+@property (assign) int currentCalibrationTarget;
 
 - (void) processInputBuffer: (AudioQueueBufferRef) buffer queue:(AudioQueueRef) queue;
-- (void) beginCalibrating;
+- (void)beginCalibrating:(int)calTarget;
 
 @end

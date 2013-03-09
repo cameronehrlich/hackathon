@@ -49,7 +49,7 @@
     int i;
     for(i=0; i<size;i++) {
         if (lastValue == 0 && tap[i] == 0) {
-            NSLog(@"completed avg after %d", i);
+//            NSLog(@"completed avg after %d", i);
             break;
         }
         sum += tap[i];
@@ -67,7 +67,7 @@
     int i;
     for(i=0; i < size; i++) {
         if (lastValue == 0 && vector[i] == 0) {
-            NSLog(@"completed sigma after %d", i);
+//            NSLog(@"completed sigma after %d", i);
             break;
         }
         sum += powf((vector[i]-mean),2);
