@@ -21,6 +21,7 @@
 		32DB1B0F16EB07B4001B0C17 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1B0C16EB07B4001B0C17 /* AudioToolbox.framework */; };
 		32DB1B1116EB07B4001B0C17 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1B0E16EB07B4001B0C17 /* CoreAudio.framework */; };
 		32DB1B1416EB08D5001B0C17 /* ADAudioModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DB1B1316EB08D5001B0C17 /* ADAudioModel.m */; };
+		32DB1B1616EB2804001B0C17 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1B1516EB2804001B0C17 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		32DB1B0E16EB07B4001B0C17 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		32DB1B1216EB08D4001B0C17 /* ADAudioModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADAudioModel.h; sourceTree = "<group>"; };
 		32DB1B1316EB08D5001B0C17 /* ADAudioModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADAudioModel.m; sourceTree = "<group>"; };
+		32DB1B1516EB2804001B0C17 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32DB1B1616EB2804001B0C17 /* AVFoundation.framework in Frameworks */,
 				32DB1B0F16EB07B4001B0C17 /* AudioToolbox.framework in Frameworks */,
 				32DB1B1116EB07B4001B0C17 /* CoreAudio.framework in Frameworks */,
 				32DB1AEA16EAF42F001B0C17 /* UIKit.framework in Frameworks */,
@@ -66,6 +69,7 @@
 		32DB1ADD16EAF42F001B0C17 = {
 			isa = PBXGroup;
 			children = (
+				32DB1B1516EB2804001B0C17 /* AVFoundation.framework */,
 				32DB1AEF16EAF42F001B0C17 /* Acoustic Detection */,
 				32DB1AE816EAF42F001B0C17 /* Frameworks */,
 				32DB1AE716EAF42F001B0C17 /* Products */,

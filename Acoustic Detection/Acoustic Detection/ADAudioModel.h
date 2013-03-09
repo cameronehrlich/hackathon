@@ -10,12 +10,9 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 
-    // Constants
-const Float64 kSampleRate = 44100.0;
-const NSUInteger kBufferByteSize = 2048;
-
 @interface ADAudioModel : NSObject
 
 - (void) processInputBuffer: (AudioQueueBufferRef) buffer queue:(AudioQueueRef) queue;
+- (void) processOutputBuffer: (AudioQueueBufferRef) buffer queue:(AudioQueueRef) queue;
 
 @end

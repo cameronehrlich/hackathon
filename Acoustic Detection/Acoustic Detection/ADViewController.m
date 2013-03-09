@@ -19,7 +19,6 @@
     
     model = [[ADAudioModel alloc] init];
     
-    
 }
 
 - (void)didReceiveMemoryWarning
