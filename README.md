@@ -11,9 +11,9 @@ had in mind was turning a desk into a drum set (Magic Drums!) by calibrating cer
 unique to that spot; which from there could be turned into a "DrumHero"-esque game.  Other applications we considered were
 a trivia game in which the first person to tap in their "zone" on the table gets to answer, or once we fine-tune the
 detection algorithm, could even be used as a portable piano or synthesizer that isn't confined to a 4-inch touch screen! (We know this will be tricky!)
-The main inspiration for this was a video showcasing students' work on using a single microphone to create a touch-sensitive
-chalkboard (http://www.youtube.com/watch?v=ZoAslMiukAQ), and our detection algorithm is based on one form of theirs (though
-tweaked significantly to account for the buffering and framing of acoustic input data).
+The main inspiration for this was a video showcasing students' work on using a single accelorometer to create a tap-sensitive
+chalkboard (http://www.youtube.com/watch?v=ZoAslMiukAQ -- https://docs.google.com/file/d/0B1oRgy6mXOKaazNqX3g1dW1LUVU/edit?pli=1), and our detection algorithm is based on one form of theirs -- although we
+tweaked ours significantly to account for the buffering and framing of audio input data).
 
 We thought of this idea a while ago, but only decided on this project about 5 minutes before arriving at the Hackathon, and started from 
 scratch with researching the paper linked in the video, so there are many areas that have room for improvement. Our detection algorithm is still immature
