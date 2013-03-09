@@ -9,14 +9,15 @@
 #import "ADAudioModel.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
+#import "Convolver.h"
+#include <stdio.h>
 
 const Float64 kSampleRate = 44100.0;
-const NSUInteger kBufferByteSize = 2048;
+const NSUInteger kBufferByteSize = 2048 * 4;
 
 @implementation ADAudioModel{
     
-@private
-	AudioQueueRef inputQueue;
+    AudioQueueRef inputQueue;
     AudioQueueRef outputQueue;
     
     AudioQueueBufferRef constBuffer;
@@ -27,7 +28,16 @@ const NSUInteger kBufferByteSize = 2048;
 	double noteDecay;
 	int noteFrame;
 	NSLock *noteLock;
+    
+    Convolver *convolver;
+    
+    int countDown;
+    Float32* calibration; 
+
 }
+
+@synthesize isCalibrating;
+@synthesize parent;
 
 
 - (id)init
@@ -36,23 +46,37 @@ const NSUInteger kBufferByteSize = 2048;
     if (self) {
         
         bool suc = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-        
         NSLog(@"AV Session created? : %d", suc);
-        
-        
-//        OSStatus rc = AudioSessionSetActive(true);
 
-        [self startInputAudioQueue];
-        [self startOutputAudioQueue];
+        convolver = [[Convolver alloc] init];
         
-//        [NSTimer scheduledTimerWithTimeInterval:2.00 target:self selector:@selector(playNote) userInfo:nil repeats:YES];
+        isCalibrating = NO;
+        
+        countDown = 0;        
+        [self startInputAudioQueue];
+//        [self startOutputAudioQueue];
+        
     }
     return self;
 }
 
+
+
+-(void)log:(NSString*)str{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:str];
+    });
+}
+
+
+-(void)beginCalibrating{
+    [self log:@"Ready to Calibrate..."];
+    isCalibrating = YES;
+}
+
 - (void)startInputAudioQueue {
     OSStatus err;
-
+    
         //Input
     
 	AudioStreamBasicDescription streamFormat;
@@ -61,14 +85,14 @@ const NSUInteger kBufferByteSize = 2048;
 	streamFormat.mFormatFlags = kLinearPCMFormatFlagIsFloat | kAudioFormatFlagsNativeEndian;
 	streamFormat.mBitsPerChannel = 32;
 	streamFormat.mChannelsPerFrame = 1;
-	streamFormat.mBytesPerPacket = 4 * streamFormat.mChannelsPerFrame;
-	streamFormat.mBytesPerFrame = 4 * streamFormat.mChannelsPerFrame;
+	streamFormat.mBytesPerPacket = 4;
+	streamFormat.mBytesPerFrame = 4;
 	streamFormat.mFramesPerPacket = 1;
 	streamFormat.mReserved = 0;
     
     err = AudioQueueNewInput (&streamFormat, InputBufferCallaback, (__bridge void *)(self), nil, nil, 0, &inputQueue);
     if (err != noErr) NSLog(@"AudioQueueNewInput() error: %ld", err);
-		AudioQueueBufferRef buffer;
+    AudioQueueBufferRef buffer;
 	for (int i=0; i<3; i++) {
 		err = AudioQueueAllocateBuffer (inputQueue, kBufferByteSize, &buffer);
 		if (err == noErr) {
@@ -93,10 +117,10 @@ void InputBufferCallaback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 -(void) processInputBuffer: (AudioQueueBufferRef) buffer queue:(AudioQueueRef) queue {
         // FInd the peak amplitude.
     
-	int count = buffer->mAudioDataByteSize / sizeof (Float32);
+	int count = buffer->mAudioDataByteSize / sizeof (Float32) ;
     
 	Float32 *audioData = buffer->mAudioData;
-
+    
     constBuffer = buffer;
 	
     Float32 max = 0.0;
@@ -114,17 +138,97 @@ void InputBufferCallaback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
         }
 	}
 	
-   
-        // Update level meter on main thread
+    
+        // begin testing
+    
+    float threshHold = -10.0f;
+    
     double db = 20 * log10 (max);
-    if (db > -27.0f) {
-        [self playNote];
-//       NSLog(@"%f", db);
+    if (countDown < 0) {
+        if (db > threshHold) {
+            countDown = 10;
+            
+            Float32 *blah = calloc(count, sizeof(Float32));
+//            Float32 *blah = malloc(count * sizeof(Float32));
+
+            int startingIndex = 0;
+            float currentHighest = -100.00;
+            
+            for(int i = 0; i < count; i++){
+                if (fabsf(audioData[i]) > currentHighest ) {
+                    currentHighest = fabsf(audioData[i]);
+                    startingIndex = i;
+                }
+            }
+            
+
+            [self log:[NSString stringWithFormat:@"count: %d, starting: %d",count, startingIndex]];
+//
+//            if (startingIndex > 2* (count/3) ) {
+//                NSLog(@"Cancelled.  Insufficient buffer length");
+//                countDown = 0;
+//                return;
+//            }
+            
+            
+            int index = 0;
+            for (int i = startingIndex; i < count; i++) {
+                blah[index] = audioData[i] ;
+                index++;
+            }
+            
+            
+            if (isCalibrating) {
+//                [self log:@"calibrating"];
+                
+                [self calibrate:blah WithCount:count];
+            }else{
+//                [self log:@"testing"];
+               [self test:blah WithCount:count];
+            }
+        }
+    }else{
+        countDown--;
     }
+
     
     OSStatus err = AudioQueueEnqueueBuffer(queue, buffer, 0, NULL);
 	if (err != noErr)
 		NSLog(@"AudioQueueEnqueueBuffer() error %ld", err);
+}
+
+-(void)test:(Float32*)buff WithCount:(int)count{
+    
+    float avgC = 0;
+    float avgB = 0;
+    if (calibration != nil) {
+        for (int i = 0; i< count; i++) {
+            if (i < 11) {
+                avgC += calibration[i];
+                avgB += buff[i];
+            }
+        }
+
+        [self log:[NSString stringWithFormat:@"Cal : %f, Buff : %f", avgC/10,avgB/10]];
+        
+        Float32 rating = [convolver convolveVector:buff ofSize:count with:calibration ofSize:count];
+
+        [self log:[NSString stringWithFormat:@"Rating : %f",rating]];
+    }
+
+    
+    
+}
+
+-(void)calibrate:(Float32*)buff WithCount:(int)count{
+
+    calibration = malloc(count*sizeof(Float32));
+
+    memcpy(calibration, buff, count);
+    
+    [self log:@"Calibrated"];
+    
+    isCalibrating = NO;
 }
 
 
@@ -160,8 +264,8 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 	for (i=0; i<3; i++) {
 		err = AudioQueueAllocateBuffer (outputQueue, kBufferByteSize, &buffer);
 		if (err == noErr) {
-            [self generateTone: buffer];
-
+//            [self generateTone: buffer];
+            
 			err = AudioQueueEnqueueBuffer (outputQueue, buffer, 0, nil);
 			if (err != noErr) NSLog(@"AudioQueueEnqueueBuffer() error: %ld", err);
 		} else {
@@ -179,7 +283,7 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
         // Fill buffer.
 	[self generateTone: buffer];
 	
-//    buffer = constBuffer;
+        //    buffer = constBuffer;
     
         // Re-enqueue buffer.
 	OSStatus err = AudioQueueEnqueueBuffer(queue, buffer, 0, NULL);
@@ -188,11 +292,11 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 }
 
 - (void) generateTone: (AudioQueueBufferRef) buffer {
-	[noteLock lock];
 	
-	if (noteAmplitude == 0.0) {
+	if (constBuffer == nil) {
             // Skip rendering audio if the amplitude is zero.
 		memset(buffer->mAudioData, 0, buffer->mAudioDataBytesCapacity);
+        buffer->mAudioDataByteSize = buffer->mAudioDataBytesCapacity;
 	} else {
         
         int frame, count = buffer->mAudioDataBytesCapacity / sizeof (Float32);
@@ -204,43 +308,11 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
             
             audioData[frame] = constBufferRef[frame];
         }
-//        double db = 20 * log10 (max);
-//        
-//        NSLog(@"MAX : %f",db);
         
-        
-        
-//            // Generate a sine wave.
-//		double x, y;
-//		
-//		for (frame = 0; frame < count; frame++) {
-//			x = noteFrame * noteFrequency / kSampleRate;
-//			y = sin (x * 2.0 * M_PI) * noteAmplitude;
-//			audioData[frame] = y;
-//			
-//                // Advance counters
-//			noteAmplitude -= noteDecay;
-//			if (noteAmplitude < 0.0)
-//				noteAmplitude = 0.0;
-//			noteFrame++;
-//		}
 	}
 	
         // Don't forget to set the actual size of the data in the buffer.
 	buffer->mAudioDataByteSize = buffer->mAudioDataBytesCapacity;
-    
-	
-	[noteLock unlock];
-}
-
-- (void)playNote {
-//	double tag = [sender tag];
-	[noteLock lock];
-	noteFrame = 0;
-	noteFrequency = 3500 / 10.0;
-	noteAmplitude = 4.0;
-	noteDecay = 3.0 / 44100.0;
-	[noteLock unlock];
 }
 
 

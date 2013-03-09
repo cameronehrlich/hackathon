@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioToolbox.h>
 
+
 @interface ADViewController : UIViewController
+
+
+@property (strong, nonatomic) IBOutlet UITextView *console;
+
+-(IBAction)calibrateButton:(id)sender;
+-(void)log:(NSString*)str;
 
 @end

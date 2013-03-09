@@ -12,7 +12,11 @@
 
 @interface ADAudioModel : NSObject
 
+@property (assign) BOOL isCalibrating;
+@property (nonatomic, strong) UIViewController *parent;
 - (void) processInputBuffer: (AudioQueueBufferRef) buffer queue:(AudioQueueRef) queue;
 - (void) processOutputBuffer: (AudioQueueBufferRef) buffer queue:(AudioQueueRef) queue;
+
+-(void)beginCalibrating;
 
 @end

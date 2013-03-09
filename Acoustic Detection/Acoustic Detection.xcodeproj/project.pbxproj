@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		32D0E63C16EB7C7A00A1837D /* Convolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 32D0E63B16EB7C7A00A1837D /* Convolver.m */; };
 		32DB1AEA16EAF42F001B0C17 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1AE916EAF42F001B0C17 /* UIKit.framework */; };
 		32DB1AEC16EAF42F001B0C17 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1AEB16EAF42F001B0C17 /* Foundation.framework */; };
 		32DB1AEE16EAF42F001B0C17 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32DB1AED16EAF42F001B0C17 /* CoreGraphics.framework */; };
@@ -25,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		32D0E63A16EB7C7900A1837D /* Convolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Convolver.h; sourceTree = "<group>"; };
+		32D0E63B16EB7C7A00A1837D /* Convolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Convolver.m; sourceTree = "<group>"; };
 		32DB1AE616EAF42F001B0C17 /* Acoustic Detection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Acoustic Detection.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		32DB1AE916EAF42F001B0C17 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		32DB1AEB16EAF42F001B0C17 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -69,7 +72,6 @@
 		32DB1ADD16EAF42F001B0C17 = {
 			isa = PBXGroup;
 			children = (
-				32DB1B1516EB2804001B0C17 /* AVFoundation.framework */,
 				32DB1AEF16EAF42F001B0C17 /* Acoustic Detection */,
 				32DB1AE816EAF42F001B0C17 /* Frameworks */,
 				32DB1AE716EAF42F001B0C17 /* Products */,
@@ -87,6 +89,7 @@
 		32DB1AE816EAF42F001B0C17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				32DB1B1516EB2804001B0C17 /* AVFoundation.framework */,
 				32DB1B0C16EB07B4001B0C17 /* AudioToolbox.framework */,
 				32DB1B0D16EB07B4001B0C17 /* AudioUnit.framework */,
 				32DB1B0E16EB07B4001B0C17 /* CoreAudio.framework */,
@@ -107,6 +110,8 @@
 				32DB1B0516EAF42F001B0C17 /* ADViewController.m */,
 				32DB1B1216EB08D4001B0C17 /* ADAudioModel.h */,
 				32DB1B1316EB08D5001B0C17 /* ADAudioModel.m */,
+				32D0E63A16EB7C7900A1837D /* Convolver.h */,
+				32D0E63B16EB7C7A00A1837D /* Convolver.m */,
 				32DB1AF016EAF42F001B0C17 /* Supporting Files */,
 			);
 			path = "Acoustic Detection";
@@ -197,6 +202,7 @@
 				32DB1AFA16EAF42F001B0C17 /* ADAppDelegate.m in Sources */,
 				32DB1B0616EAF42F001B0C17 /* ADViewController.m in Sources */,
 				32DB1B1416EB08D5001B0C17 /* ADAudioModel.m in Sources */,
+				32D0E63C16EB7C7A00A1837D /* Convolver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +325,7 @@
 				32DB1B0B16EAF42F001B0C17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

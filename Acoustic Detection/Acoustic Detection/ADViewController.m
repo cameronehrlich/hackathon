@@ -13,12 +13,22 @@
     ADAudioModel *model;
 }
 
+@synthesize console;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     model = [[ADAudioModel alloc] init];
+    [model setParent:self];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(log:) name:@"log" object:nil];
+    
+}
+
+-(void)log:(NSNotification*)notification{
+    NSString *str = [notification.object description];
+    NSLog(@"%@", str );
+    [console setText:[NSString stringWithFormat:@"%@\n\n%@", str, console.text ]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -27,4 +37,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)calibrateButton:(id)sender {
+    
+    [model beginCalibrating];
+}
 @end
