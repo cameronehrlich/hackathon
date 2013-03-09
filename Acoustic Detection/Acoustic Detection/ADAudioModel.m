@@ -40,8 +40,7 @@ const NSUInteger kBufferByteSize = 2048;
         NSLog(@"AV Session created? : %d", suc);
         
         
-        OSStatus rc = AudioSessionSetActive(true);
-        NSLog(@"Sesssion set active: %ld", rc);
+//        OSStatus rc = AudioSessionSetActive(true);
 
         [self startInputAudioQueue];
         [self startOutputAudioQueue];
@@ -120,7 +119,7 @@ void InputBufferCallaback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
     double db = 20 * log10 (max);
     if (db > -27.0f) {
         [self playNote];
-       NSLog(@"%f", db);
+//       NSLog(@"%f", db);
     }
     
     OSStatus err = AudioQueueEnqueueBuffer(queue, buffer, 0, NULL);
@@ -161,7 +160,6 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 	for (i=0; i<3; i++) {
 		err = AudioQueueAllocateBuffer (outputQueue, kBufferByteSize, &buffer);
 		if (err == noErr) {
-//			buffer = constBuffer;
             [self generateTone: buffer];
 
 			err = AudioQueueEnqueueBuffer (outputQueue, buffer, 0, nil);
@@ -196,26 +194,41 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
             // Skip rendering audio if the amplitude is zero.
 		memset(buffer->mAudioData, 0, buffer->mAudioDataBytesCapacity);
 	} else {
-            // Generate a sine wave.
-		int frame, count = buffer->mAudioDataBytesCapacity / sizeof (Float32);
-		Float32 *audioData = buffer->mAudioData;
-		double x, y;
-		
-		for (frame = 0; frame < count; frame++) {
-			x = noteFrame * noteFrequency / kSampleRate;
-			y = sin (x * 2.0 * M_PI) * noteAmplitude;
-			audioData[frame] = y;
-			
-                // Advance counters
-			noteAmplitude -= noteDecay;
-			if (noteAmplitude < 0.0)
-				noteAmplitude = 0.0;
-			noteFrame++;
-		}
+        
+        int frame, count = buffer->mAudioDataBytesCapacity / sizeof (Float32);
+        
+        Float32 *audioData = buffer->mAudioData;
+        Float32 *constBufferRef = constBuffer->mAudioData;
+        
+        for (frame = 0; frame < count; frame++) {
+            
+            audioData[frame] = constBufferRef[frame];
+        }
+//        double db = 20 * log10 (max);
+//        
+//        NSLog(@"MAX : %f",db);
+        
+        
+        
+//            // Generate a sine wave.
+//		double x, y;
+//		
+//		for (frame = 0; frame < count; frame++) {
+//			x = noteFrame * noteFrequency / kSampleRate;
+//			y = sin (x * 2.0 * M_PI) * noteAmplitude;
+//			audioData[frame] = y;
+//			
+//                // Advance counters
+//			noteAmplitude -= noteDecay;
+//			if (noteAmplitude < 0.0)
+//				noteAmplitude = 0.0;
+//			noteFrame++;
+//		}
 	}
 	
         // Don't forget to set the actual size of the data in the buffer.
 	buffer->mAudioDataByteSize = buffer->mAudioDataBytesCapacity;
+    
 	
 	[noteLock unlock];
 }
@@ -224,9 +237,9 @@ void OutputBufferCallback (void *inUserData, AudioQueueRef inAQ, AudioQueueBuffe
 //	double tag = [sender tag];
 	[noteLock lock];
 	noteFrame = 0;
-	noteFrequency = 4000 / 10.0;
+	noteFrequency = 3500 / 10.0;
 	noteAmplitude = 4.0;
-	noteDecay = 2.0 / 44100.0;
+	noteDecay = 3.0 / 44100.0;
 	[noteLock unlock];
 }
 
