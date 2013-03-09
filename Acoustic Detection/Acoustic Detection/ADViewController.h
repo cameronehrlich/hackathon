@@ -12,7 +12,6 @@
 
 @interface ADViewController : UIViewController
 
-
 @property (strong, nonatomic) IBOutlet UITextView *console;
 
 -(IBAction)calibrateButton:(id)sender;

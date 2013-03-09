@@ -19,7 +19,6 @@
     [super viewDidLoad];
     
     model = [[ADAudioModel alloc] init];
-    [model setParent:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(log:) name:@"log" object:nil];
     
@@ -31,14 +30,14 @@
     [console setText:[NSString stringWithFormat:@"%@\n\n%@", str, console.text ]];
 }
 
+- (IBAction)calibrateButton:(id)sender {
+    [model beginCalibrating];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)calibrateButton:(id)sender {
-    
-    [model beginCalibrating];
-}
+
 @end

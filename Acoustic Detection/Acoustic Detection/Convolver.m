@@ -9,36 +9,19 @@
 #import "Convolver.h"
 #import "Math.h"
 
-/*
-#include <Accelerate/Accelerate.h>
-#define NF  3
-#define NC  (2*NF+1)
- */
-
-@implementation Convolver{
-    
-}
-
+@implementation Convolver
 
 
 - (id)init
 {
     self = [super init];
     if (self) {
-            //      Float32* testa = [self fuzzTestofSize:200];
-//        //NSLog(@"fuzzVector[%d] == %f",1,testa[1]);
-//Float32* testb = malloc(200*sizeof(Float32));
-            //for (int i=0; i<200;i++) {
-                //        testb[i]= testa[i]+(arc4random()%30);
-                //}
-        //[self sigmaOf:testa ofSize:10 withMean:[self averageVector:testa ofSize:10]];
-        //[self convolveVector:testa ofSize:200 with:testb ofSize:200];
+
     }
     return self;
 }
 
--(Float32) convolveVector: (Float32*)first ofSize:(int)firstSize with:(Float32*)second ofSize:(int)secondSize
-{
+-(Float32) convolveVector: (Float32*)first ofSize:(int)firstSize with:(Float32*)second ofSize:(int)secondSize {
 
     Float32 rating;
     Float32 firstAverage = [self averageVector:first ofSize:firstSize];
@@ -55,7 +38,6 @@
         rateSum += (first[j]-firstAverage)*(second[j]-secondAverage);
     }
     rating = rateSum/(j*firstSigma*secondSigma);
-    NSLog(@"rating for fuzzTest:%f",rating);
     return rating;
 }
 
@@ -75,7 +57,6 @@
     }
     
     mean = sum/i;
-//     NSLog(@"average of array:%f", mean);
     return mean;
 }
 
@@ -93,16 +74,15 @@
         lastValue = vector[i];
     }
     sigma = sqrtf(sum/i);
-//    NSLog(@"sigma of array:%f", sigma);
     return sigma;
 }
 
+    //unused testing method
 -(Float32*) fuzzTestofSize:(int)length {
     Float32* fuzzVector = malloc(length*sizeof(Float32));
     if (fuzzVector == NULL) {return 0;};
     for (int i = 0; i < length; i++) {
         fuzzVector[i] =  arc4random()%50;
-        //NSLog(@"fuzzVector[%d] == %f",i,fuzzVector[i]);
     }
     return fuzzVector;
     
